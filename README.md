@@ -21,7 +21,7 @@
 
 OccuNet is a two-stage deep-learning framework for femoral-neck fracture detection on pelvic or hip radiographs.
 
-This repository provides code, model configuration, and example files related to the development and evaluation of OccuNet. The framework was developed for research transparency and reproducibility in a retrospective multicenter diagnostic-accuracy study.
+This repository provides code, model configuration, pretrained Stage 1 weights, package requirements, and an example de-identified radiograph related to the development and evaluation of OccuNet. The framework was developed for research transparency and reproducibility in a retrospective multicenter diagnostic-accuracy study.
 
 OccuNet combines artifact-robust contrastive pretraining with detector fine-tuning for femoral-neck fracture localization.
 
@@ -37,6 +37,23 @@ Patient-level imaging data are not publicly released because of institutional pr
 
 ---
 
+## Repository structure
+
+```text
+OccuNet/
+├── assets/
+│   └── occunet_logo.png
+├── OccuNet.yaml
+├── stage1_contrastive_pretraining.py
+├── stage1_model_weights.pt
+├── stage2_OccuNet_training.py
+├── requirements.txt
+├── Test_radiograph.png
+└── README.md
+```
+
+---
+
 ## Repository contents
 
 | File | Description |
@@ -45,6 +62,7 @@ Patient-level imaging data are not publicly released because of institutional pr
 | `stage1_contrastive_pretraining.py` | Stage 1 contrastive pretraining script for artifact-robust radiographic feature learning. |
 | `stage1_model_weights.pt` | Stage 1 pretrained model weights used to initialize detector fine-tuning. |
 | `stage2_OccuNet_training.py` | Stage 2 detector fine-tuning script for femoral-neck fracture localization. |
+| `requirements.txt` | Python package requirements for reproducing the software environment. |
 | `Test_radiograph.png` | Example de-identified radiograph for code demonstration. |
 
 ---
@@ -97,11 +115,12 @@ cd OccuNet
 Install dependencies:
 
 ```bash
-pip install torch torchvision
-pip install ultralytics opencv-python numpy matplotlib pyyaml pytorch-grad-cam
+pip install -r requirements.txt
 ```
 
-The exact package versions used in the study are listed in the software environment section above.
+The experimental environment used CUDA 12.9 and an NVIDIA GeForce RTX 4060 GPU. Users should ensure that their local PyTorch, CUDA, and GPU driver versions are compatible with their hardware and operating system.
+
+The exact Python package versions used in the study are listed in `requirements.txt` and in the software environment section above.
 
 ---
 
@@ -129,7 +148,7 @@ This script fine-tunes the OccuNet detector using the architecture defined in `O
 
 ## Stage 2 configuration
 
-The Stage 2 training script allows the user to define the model configuration, dataset configuration, pretrained weights, trainable network components, and regularization strength.
+The Stage 2 training script allows users to define the model configuration, dataset configuration, pretrained weights, trainable network components, and regularization strength.
 
 Before running `stage2_OccuNet_training.py`, update the following paths in the trainer class according to your local environment:
 
@@ -233,6 +252,7 @@ The available code includes:
 - Stage 1 contrastive pretraining
 - Stage 2 detector fine-tuning
 - Model architecture configuration
+- Python package requirements
 - Example de-identified radiograph for demonstration
 
 The repository does not include patient-level imaging data, original clinical annotations, institutional databases, or protected health information.
