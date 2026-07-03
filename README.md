@@ -59,3 +59,48 @@ Clone the repository:
 ```bash
 git clone https://github.com/xinxiaolin123/OccuNet.git
 cd OccuNet
+
+Install dependencies:
+
+pip install torch torchvision
+pip install ultralytics opencv-python numpy matplotlib pyyaml pytorch-grad-cam
+
+The exact package versions used in the manuscript are listed above.
+
+Example workflow
+Stage 1: contrastive pretraining
+python "stage1_contrastive_learning(Pretraining).py"
+
+This script performs artifact-robust contrastive pretraining and saves pretrained weights for detector initialization.
+
+Stage 2: detector fine-tuning
+python stage2_Occunet_Training.py
+
+This script fine-tunes the OccuNet detector using the architecture defined in Occunet.yaml.
+
+Before running the scripts, update local paths, dataset locations, and output directories according to your environment.
+
+Data format
+
+The training pipeline expects de-identified pelvic or hip radiographs and corresponding fracture annotations in an object-detection format compatible with the Ultralytics workflow.
+
+Because patient-level radiographs and annotations are subject to institutional privacy and ethics restrictions, they are not included in this repository.
+
+Model output
+
+OccuNet produces femoral-neck fracture localization outputs, including bounding boxes and confidence scores. For radiograph-level diagnostic classification, the highest femoral-neck detection confidence can be used as the radiograph-level score.
+
+Reproducibility notes
+
+The manuscript experiments used five independent training runs with fixed random seeds:
+
+42, 123, 456, 789, 1024
+
+Binary diagnostic metrics and AUCs were calculated separately for each run and summarized as mean performance across runs.
+Contact
+
+For questions about the code or research use, please contact the corresponding author listed in the manuscript.
+
+License
+
+This repository is provided for academic research and reproducibility. Reuse, redistribution, or clinical deployment of the model or weights may be subject to institutional, ethical, patent, and regulatory restrictions.
