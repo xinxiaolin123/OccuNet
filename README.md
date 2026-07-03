@@ -127,6 +127,56 @@ This script fine-tunes the OccuNet detector using the architecture defined in `O
 
 ---
 
+## Stage 2 configuration
+
+The Stage 2 training script allows the user to define the model configuration, dataset configuration, pretrained weights, trainable network components, and regularization strength.
+
+Before running `stage2_OccuNet_training.py`, update the following paths in the trainer class according to your local environment:
+
+```python
+self.model_config = "/path/to/OccuNet.yaml"
+self.train_config = "/path/to/default.yaml"
+self.data_config = "/path/to/dataset.yaml"
+self.pretrained_weights = "/path/to/stage1_model_weights.pt"
+```
+
+The script supports selective layer training through the `TRAINING_MODE` variable:
+
+```python
+TRAINING_MODE = "neck"
+```
+
+Available options are:
+
+| Option | Trainable component |
+|---|---|
+| `backbone` | Backbone feature-extraction layers |
+| `neck` | Neck feature-fusion layers |
+| `head` | Detection head |
+| `neck_head` | Neck and detection head |
+| `full` | All network layers |
+
+The script also supports different regularization settings through the `ROBUSTNESS_LEVEL` variable:
+
+```python
+ROBUSTNESS_LEVEL = "low"
+```
+
+Available options are:
+
+| Option | Intended use |
+|---|---|
+| `low` | Mild regularization |
+| `medium` | Moderate regularization |
+| `high` | Stronger regularization |
+| `extreme` | Strong regularization for exploratory sensitivity analysis |
+
+These settings control training hyperparameters such as weight decay, dropout, learning-rate scaling, data augmentation intensity, mixup, and label smoothing.
+
+The default configuration in the public script is intended as a runnable template. Users should adapt paths, training mode, regularization level, batch size, device ID, and dataset configuration to their own computing environment and dataset.
+
+---
+
 ## Data format
 
 The training pipeline expects de-identified pelvic or hip radiographs and corresponding fracture annotations in an object-detection format compatible with the Ultralytics workflow.
