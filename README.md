@@ -21,7 +21,7 @@
 
 OccuNet is a two-stage deep-learning framework for femoral-neck fracture detection on pelvic or hip radiographs.
 
-This repository provides code, model configuration, pretrained Stage 1 weights, package requirements, and an example de-identified radiograph related to the development and evaluation of OccuNet. The framework was developed for research transparency and reproducibility in a retrospective multicenter diagnostic-accuracy study.
+This repository provides code, model configuration, pretrained Stage 1 weights, Python package requirements, and an example de-identified radiograph related to the development and evaluation of OccuNet. The framework was developed for research transparency and reproducibility in a retrospective multicenter diagnostic-accuracy study.
 
 OccuNet combines artifact-robust contrastive pretraining with detector fine-tuning for femoral-neck fracture localization.
 
@@ -83,6 +83,31 @@ At inference, a radiograph can be classified as positive when at least one femor
 
 ---
 
+## Base detection framework
+
+OccuNet was developed within a YOLOv12-compatible Ultralytics-style object-detection framework.
+
+YOLOv12 is an attention-centric real-time object-detection framework. In OccuNet, the base detector framework was adapted for femoral-neck fracture detection on pelvic or hip radiographs through a customized model configuration, artifact-robust Stage 1 contrastive pretraining, and Stage 2 detector fine-tuning.
+
+Users who wish to reproduce or extend the detector implementation should ensure that their local environment supports YOLOv12-compatible model definitions and Ultralytics-style training workflows.
+
+Relevant upstream repository:
+
+```text
+https://github.com/sunsmarterjie/yolov12
+```
+
+OccuNet-specific files in this repository include:
+
+- `OccuNet.yaml`
+- `stage1_contrastive_pretraining.py`
+- `stage1_model_weights.pt`
+- `stage2_OccuNet_training.py`
+
+Users should review and comply with the license terms of any third-party frameworks or dependencies used in their local implementation.
+
+---
+
 ## Software environment
 
 The experimental environment used for model training and evaluation included:
@@ -118,9 +143,36 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+OccuNet was implemented in a YOLOv12-compatible Ultralytics-style detection environment. Users should ensure that the local YOLOv12-compatible implementation is available and that `OccuNet.yaml` can be recognized by the training framework.
+
+For users setting up the detector framework from the upstream YOLOv12 repository, see:
+
+```text
+https://github.com/sunsmarterjie/yolov12
+```
+
 The experimental environment used CUDA 12.9 and an NVIDIA GeForce RTX 4060 GPU. Users should ensure that their local PyTorch, CUDA, and GPU driver versions are compatible with their hardware and operating system.
 
 The exact Python package versions used in the study are listed in `requirements.txt` and in the software environment section above.
+
+---
+
+## requirements.txt
+
+The `requirements.txt` file should contain the following package versions:
+
+```text
+torch==2.8.0
+torchvision==0.23.0
+ultralytics==8.0.196
+opencv-python==4.12.0.88
+numpy==2.2.6
+matplotlib==3.10.5
+PyYAML==6.0.2
+pytorch-grad-cam==1.5.5
+```
+
+CUDA, GPU drivers, and operating-system-level dependencies are not included in `requirements.txt` and should be configured separately according to the user's local hardware environment.
 
 ---
 
@@ -269,6 +321,7 @@ Important limitations include:
 - External users must prepare their own de-identified datasets and annotations.
 - Model performance may differ across institutions, imaging protocols, acquisition devices, patient populations, and clinical workflows.
 - Prospective validation is required before any clinical use.
+- Local results may differ if users modify the YOLOv12-compatible framework, package versions, hardware environment, training schedule, or dataset configuration.
 
 ---
 
@@ -284,4 +337,4 @@ This repository is provided for academic research and reproducibility.
 
 Reuse, redistribution, commercial use, or clinical deployment of the model, code, or weights may be subject to institutional, ethical, patent, and regulatory restrictions.
 
-Users are responsible for ensuring that any use of this repository complies with applicable laws, institutional policies, data-use agreements, and ethical requirements.
+Users are responsible for ensuring that any use of this repository complies with applicable laws, institutional policies, data-use agreements, third-party software licenses, and ethical requirements.
