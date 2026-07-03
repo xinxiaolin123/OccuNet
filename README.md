@@ -1,42 +1,73 @@
-# OccuNet
+<p align="center">
+  <img src="assets/occunet_logo.png" alt="OccuNet logo" width="220">
+</p>
 
-OccuNet is a two-stage deep-learning framework for femoral-neck fracture detection on pelvic or hip radiographs. This repository provides code and model-configuration files related to the Radiology manuscript:
+<h1 align="center">OccuNet</h1>
 
-**Improving Recognition Performance and Reader Efficiency for Femoral-Neck Fracture Detection on Pelvic or Hip Radiographs Using Artificial Intelligence**
+<p align="center">
+  A two-stage deep-learning framework for femoral-neck fracture detection on pelvic or hip radiographs.
+</p>
 
-OccuNet was developed for research use in a retrospective multicenter diagnostic-accuracy study. The framework includes artifact-robust contrastive pretraining followed by detector fine-tuning for femoral-neck fracture localization.
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10-blue">
+  <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-2.8.0-orange">
+  <img alt="Ultralytics" src="https://img.shields.io/badge/Ultralytics-8.0.196-green">
+  <img alt="Research use" src="https://img.shields.io/badge/Use-Research%20only-lightgrey">
+</p>
+
+---
+
+## Overview
+
+OccuNet is a two-stage deep-learning framework for femoral-neck fracture detection on pelvic or hip radiographs.
+
+This repository provides code, model configuration, and example files related to the development and evaluation of OccuNet. The framework was developed for research transparency and reproducibility in a retrospective multicenter diagnostic-accuracy study.
+
+OccuNet combines artifact-robust contrastive pretraining with detector fine-tuning for femoral-neck fracture localization.
+
+---
 
 ## Important notice
 
-This repository is provided for research transparency and reproducibility. It is **not** a clinically approved diagnostic device and must not be used for clinical decision-making, triage, or patient management without prospective validation, regulatory review, and appropriate institutional approval.
+This repository is provided for academic research and reproducibility.
+
+OccuNet is **not** a clinically approved diagnostic device and must not be used for clinical decision-making, triage, or patient management without prospective validation, regulatory review, and appropriate institutional approval.
 
 Patient-level imaging data are not publicly released because of institutional privacy, ethics approval, and data-use restrictions.
+
+---
 
 ## Repository contents
 
 | File | Description |
 |---|---|
-| `Occunet.yaml` | OccuNet detector architecture configuration. |
-| `stage1_contrastive_learning(Pretraining).py` | Stage 1 contrastive pretraining script for artifact-robust radiographic feature learning. |
+| `OccuNet.yaml` | OccuNet detector architecture configuration. |
+| `stage1_contrastive_pretraining.py` | Stage 1 contrastive pretraining script for artifact-robust radiographic feature learning. |
 | `stage1_model_weights.pt` | Stage 1 pretrained model weights used to initialize detector fine-tuning. |
-| `stage2_Occunet_Training.py` | Stage 2 detector fine-tuning script for femoral-neck fracture localization. |
+| `stage2_OccuNet_training.py` | Stage 2 detector fine-tuning script for femoral-neck fracture localization. |
 | `Test_radiograph.png` | Example de-identified radiograph for code demonstration. |
+
+---
 
 ## Method overview
 
-OccuNet uses a two-stage training paradigm:
+OccuNet uses a two-stage training paradigm.
 
-1. **Stage 1: Artifact-robust contrastive pretraining**  
-   Paired original and artifact-augmented radiographs are used to learn artifact-invariant radiographic representations.
+### Stage 1: artifact-robust contrastive pretraining
 
-2. **Stage 2: Detector fine-tuning**  
-   The pretrained backbone is transferred to a detector trained for femoral-neck fracture localization on pelvic or hip radiographs.
+Stage 1 uses paired original and artifact-augmented radiographs to learn artifact-invariant radiographic representations. The objective is to improve robustness to acquisition-related degradation while preserving clinically relevant femoral-neck anatomy.
 
-At inference, a radiograph is classified as positive when at least one femoral-neck detection reaches the prespecified confidence threshold.
+### Stage 2: detector fine-tuning
+
+Stage 2 transfers the pretrained backbone to a detector trained for femoral-neck fracture localization on pelvic or hip radiographs.
+
+At inference, a radiograph can be classified as positive when at least one femoral-neck detection reaches the prespecified confidence threshold.
+
+---
 
 ## Software environment
 
-The manuscript experiments were run with the following environment:
+The experimental environment used for model training and evaluation included:
 
 - Python 3.10
 - PyTorch 2.8.0
@@ -52,6 +83,8 @@ The manuscript experiments were run with the following environment:
 
 A similar CUDA-enabled Python environment is recommended.
 
+---
+
 ## Installation
 
 Clone the repository:
@@ -59,48 +92,126 @@ Clone the repository:
 ```bash
 git clone https://github.com/xinxiaolin123/OccuNet.git
 cd OccuNet
+```
 
 Install dependencies:
 
+```bash
 pip install torch torchvision
 pip install ultralytics opencv-python numpy matplotlib pyyaml pytorch-grad-cam
+```
 
-The exact package versions used in the manuscript are listed above.
+The exact package versions used in the study are listed in the software environment section above.
 
-Example workflow
-Stage 1: contrastive pretraining
-python "stage1_contrastive_learning(Pretraining).py"
+---
+
+## Example workflow
+
+Before running the scripts, update local paths, dataset locations, model paths, and output directories according to your own environment.
+
+### Stage 1: contrastive pretraining
+
+```bash
+python stage1_contrastive_pretraining.py
+```
 
 This script performs artifact-robust contrastive pretraining and saves pretrained weights for detector initialization.
 
-Stage 2: detector fine-tuning
-python stage2_Occunet_Training.py
+### Stage 2: detector fine-tuning
 
-This script fine-tunes the OccuNet detector using the architecture defined in Occunet.yaml.
+```bash
+python stage2_OccuNet_training.py
+```
 
-Before running the scripts, update local paths, dataset locations, and output directories according to your environment.
+This script fine-tunes the OccuNet detector using the architecture defined in `OccuNet.yaml`.
 
-Data format
+---
+
+## Data format
 
 The training pipeline expects de-identified pelvic or hip radiographs and corresponding fracture annotations in an object-detection format compatible with the Ultralytics workflow.
 
-Because patient-level radiographs and annotations are subject to institutional privacy and ethics restrictions, they are not included in this repository.
+A typical dataset structure may follow the Ultralytics detection format:
 
-Model output
+```text
+dataset/
+├── images/
+│   ├── train/
+│   ├── val/
+│   └── test/
+├── labels/
+│   ├── train/
+│   ├── val/
+│   └── test/
+└── dataset.yaml
+```
 
-OccuNet produces femoral-neck fracture localization outputs, including bounding boxes and confidence scores. For radiograph-level diagnostic classification, the highest femoral-neck detection confidence can be used as the radiograph-level score.
+Each label file should contain bounding-box annotations for femoral-neck fracture regions in the format required by the detector training pipeline.
 
-Reproducibility notes
+Because patient-level radiographs and annotations are subject to institutional privacy, ethics approval, and data-use restrictions, they are not included in this repository.
 
-The manuscript experiments used five independent training runs with fixed random seeds:
+---
 
+## Model output
+
+OccuNet produces femoral-neck fracture localization outputs, including bounding boxes and confidence scores.
+
+For radiograph-level diagnostic classification, the highest femoral-neck detection confidence can be used as the radiograph-level score. A radiograph can be classified as positive when at least one femoral-neck detection reaches the prespecified confidence threshold.
+
+---
+
+## Reproducibility notes
+
+The study experiments used five independent training runs with fixed random seeds:
+
+```text
 42, 123, 456, 789, 1024
+```
 
-Binary diagnostic metrics and AUCs were calculated separately for each run and summarized as mean performance across runs.
-Contact
+Binary diagnostic metrics and area under the receiver operating characteristic curve values were calculated separately for each run and summarized as mean performance across runs.
+
+The internal test set was held out from model development and was not used for hyperparameter tuning, early stopping, or checkpoint selection.
+
+---
+
+## Code availability
+
+This repository provides code and model-configuration files for research transparency and reproducibility.
+
+The available code includes:
+
+- Stage 1 contrastive pretraining
+- Stage 2 detector fine-tuning
+- Model architecture configuration
+- Example de-identified radiograph for demonstration
+
+The repository does not include patient-level imaging data, original clinical annotations, institutional databases, or protected health information.
+
+---
+
+## Limitations
+
+This repository is intended to support methodological transparency. It does not provide a complete clinical deployment pipeline.
+
+Important limitations include:
+
+- Patient-level radiographs are not publicly available.
+- External users must prepare their own de-identified datasets and annotations.
+- Model performance may differ across institutions, imaging protocols, acquisition devices, patient populations, and clinical workflows.
+- Prospective validation is required before any clinical use.
+
+---
+
+## Contact
 
 For questions about the code or research use, please contact the corresponding author listed in the manuscript.
 
-License
+---
 
-This repository is provided for academic research and reproducibility. Reuse, redistribution, or clinical deployment of the model or weights may be subject to institutional, ethical, patent, and regulatory restrictions.
+## License and use restrictions
+
+This repository is provided for academic research and reproducibility.
+
+Reuse, redistribution, commercial use, or clinical deployment of the model, code, or weights may be subject to institutional, ethical, patent, and regulatory restrictions.
+
+Users are responsible for ensuring that any use of this repository complies with applicable laws, institutional policies, data-use agreements, and ethical requirements.
